@@ -12,34 +12,20 @@ app.use(cors()); // Allow requests from all origins
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Database connection configuration
-const db = mysql.createConnection({
+// Database connection configuration with connection pooling
+const pool = mysql.createPool({
+  connectionLimit: 10,
   host: 'srv936.hstgr.io',
   user: 'u263299673_linkshort',
   password: 'Admin1234*!',
   database: 'u263299673_linshort'
 });
 
-// Connect to the database
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to database:', err);
-    return;
-  }
-  console.log('Connected to the database');
-});
-
-// Add error event handler for database connection
-db.on('error', (err) => {
-  console.error('Database error:', err);
-});
-
-// Function to execute SQL queries
+// Function to execute SQL queries with retry logic
 const executeQuery = (query) => {
   return new Promise((resolve, reject) => {
-    db.query(query, (error, results, fields) => {
+    pool.query(query, (error, results, fields) => {
       if (error) {
-        console.error('Error querying database:', error);
         reject(error);
       } else {
         resolve(results);
@@ -51,15 +37,10 @@ const executeQuery = (query) => {
 // Endpoint to fetch login users
 app.get('/api/users/:email?', async (req, res) => {
   try {
-    // Execute a sample SQL query
     let email = req.query.email;
-
     let query = `SELECT * FROM users WHERE email ='${email}'`;
-    
     const results = await executeQuery(query);
-
     res.json(results);
-
   } catch (error) {
     console.error('Error querying database:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -69,9 +50,8 @@ app.get('/api/users/:email?', async (req, res) => {
 // Endpoint to register user
 app.post('/api/users/', async (req, res) => {
   try {
-    // Execute a sample SQL query
     let jsonData = req.body;
-    let name = jsonData.name , email = jsonData.email , password = jsonData.password !== '' ? jsonData.password : '' , picture = jsonData.picture;
+    let name = jsonData.name, email = jsonData.email, password = jsonData.password !== '' ? jsonData.password : '', picture = jsonData.picture;
     let query = `insert into users ( name , email , password , picture ) values ( '${name}' , '${email}' , '${password}', '${picture}' )`;
 
     await executeQuery(query);
@@ -238,6 +218,12 @@ app.get('/proxy', async (req, res) => {
       res.status(500).send('Error: Request setup failed');
     }
   }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // Start the Express server
