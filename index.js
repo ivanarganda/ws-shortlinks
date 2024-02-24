@@ -93,6 +93,24 @@ app.get('/api/urls/:short_like?/:idUser?', async (req, res) => {
   }
 });
 
+// Check if url saved
+app.get('/api/savedUrl/:idUrl?/:idUser?', async (req, res) => {
+  try {
+    // Execute a sample SQL query
+    let idUrl = req.query.idUrl;
+    let idUser = req.query.idUser;
+
+    let query = `SELECT urlsusers.idUrl as idUrl ,urlsusers.idUser as idUser FROM urlsusers WHERE idUrl=${idUrl} and idUser=${idUser}`;
+    
+    const results = await executeQuery(query);
+    res.json(results);
+
+  } catch (error) {
+    console.error('Error querying database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Endpoint to register short
 app.post('/api/urls', async (req, res) => {
   try {
