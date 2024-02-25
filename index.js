@@ -63,6 +63,58 @@ app.post('/api/users/', async (req, res) => {
   }
 });
 
+// Login user endpoint
+app.post('/api/login/', async (req, res) => {
+  try {
+    let jsonData = req.body
+    let email = jsonData.email, password = jsonData.password;
+    let query = `SELECT * FROM users WHERE email = '${email}'`;
+    const results = await executeQuery(query);
+
+    if (results.length === 0) {
+      res.status(401).json({ error: 'Invalid credentials' });
+    } else{
+       if (results[0].password === password) {
+         res.json({ message: results });
+       } else {
+         res.status(401).json({ error: 'Incorrect password' });
+       }
+    }
+
+  } catch (error) {
+    console.error('Error querying database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Register user endpoint
+app.post('/api/register/', async (req, res) => {
+  try {
+      let jsonData = req.body;
+      let name = jsonData.name, email = jsonData.email, password = jsonData.password, picture = jsonData.picture;
+
+      // Check if the user already exists
+      let query = `SELECT * FROM users WHERE email = '${email}'`;
+      const existingUser = await executeQuery(query);
+
+      if (existingUser.length > 0) {
+          // User already exists
+          res.status(401).json({ error: 'User already exists' });
+          return;
+      }
+
+      // If user does not exist, proceed with registration
+      query = `INSERT INTO users (name, email, password, picture) VALUES ('${name}', '${email}', '${password}', '${picture}')`;
+      await executeQuery(query);
+      res.json({ message: 'User registered successfully' });
+
+  } catch (error) {
+      console.error('Error querying database:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 // Endpoint to fetch data from the database urls
 app.get('/api/urls/:short_like?/:idUser?', async (req, res) => {
   try {
