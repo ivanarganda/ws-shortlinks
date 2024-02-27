@@ -145,6 +145,22 @@ app.get('/api/urls/:short_like?/:idUser?', async (req, res) => {
   }
 });
 
+// Endpoint to fetch data from the database urls
+app.get('/api/redirect_url/:idUrl?', async (req, res) => {
+  try {
+    // Execute a sample SQL query
+    let idUrl = req.query.idUrl;
+
+    let query = `SELECT * FROM urls WHERE id=${idUrl}`;
+
+    const results = await executeQuery(query);
+    res.json(results);
+  } catch (error) {
+    console.error('Error querying database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Check if url saved
 app.get('/api/savedUrl/:idUrl?/:idUser?', async (req, res) => {
   try {
