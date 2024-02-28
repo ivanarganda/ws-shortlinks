@@ -52,7 +52,7 @@ app.post('/api/users/', async (req, res) => {
   try {
     let jsonData = req.body;
     let name = jsonData.name, email = jsonData.email, password = jsonData.password !== '' ? jsonData.password : '', picture = jsonData.picture;
-    let query = `insert into users ( name , email , password , picture , created_at ) values ( '${name}' , '${email}' , '${password}', '${picture}' , CURRENT_TIMESTAMP )`;
+    let query = `insert into users ( name , email , password , picture , created_at ) values ( '${name}' , '${email}' , '${password}', '${picture}' , NOW() )`;
 
     await executeQuery(query);
     res.json({ message: 'User registered successfully' });
