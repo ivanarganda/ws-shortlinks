@@ -52,7 +52,7 @@ app.post('/api/users/', async (req, res) => {
   try {
     let jsonData = req.body;
     let name = jsonData.name, email = jsonData.email, password = jsonData.password !== '' ? jsonData.password : '', picture = jsonData.picture;
-    let query = `insert into users ( name , email , password , picture , created_at ) values ( '${name}' , '${email}' , '${password}', '${picture}' , NOW() )`;
+    let query = `insert into users ( name , email , password , picture , created_at ) values ( '${name}' , '${email}' , '${password}', '${picture}' , CURRENT_TIME )`;
 
     await executeQuery(query);
     res.json({ message: 'User registered successfully' });
@@ -104,7 +104,7 @@ app.post('/api/register/', async (req, res) => {
       }
 
       // If user does not exist, proceed with registration
-      query = `INSERT INTO users (name, email, password, picture, created_at) VALUES ('${name}', '${email}', '${password}', '${picture}' , 'now()')`;
+      query = `INSERT INTO users (name, email, password, picture, created_at) VALUES ('${name}', '${email}', '${password}', '${picture}' , CURRENT_TIME )`;
       await executeQuery(query);
       res.json({ message: 'User registered successfully' });
 
@@ -185,7 +185,7 @@ app.post('/api/urls', async (req, res) => {
     // Execute a sample SQL query
     let jsonData = req.body;
     let url = jsonData.url , short = jsonData.short , description = jsonData.description;
-    let query = `insert into urls ( url , short , description , created_at ) values ( '${url}' , '${short}' , '${description}' . 'now()' )`;
+    let query = `insert into urls ( url , short , description , created_at ) values ( '${url}' , '${short}' , '${description}' . CURRENT_TIME )`;
 
     await executeQuery(query);
     res.json({ message: 'Short registered successfully' });
@@ -202,7 +202,7 @@ app.post('/api/saveUrls', async (req, res) => {
     // Execute a sample SQL query
     let jsonData = req.body;
     let idUrl = jsonData.idUrl , idUser = jsonData.idUser;
-    let query = `insert into urlsusers ( idUser , idUrl , updated_at ) values ( ${idUser} , ${idUrl} , now() )`;
+    let query = `insert into urlsusers ( idUser , idUrl , updated_at ) values ( ${idUser} , ${idUrl} , CURRENT_TIME )`;
 
     await executeQuery(query);
     res.json({ message: 'URL saved successfully' });
