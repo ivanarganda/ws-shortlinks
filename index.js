@@ -152,8 +152,11 @@ app.get('/api/redirect_url/:idUrl?', async (req, res) => {
     let idUrl = req.query.idUrl;
 
     let query = `SELECT * FROM urls WHERE id=${idUrl}`;
-
     const results = await executeQuery(query);
+    // Get new visit which increments
+    let query2 = `UPDATE urls SET visits = visits + 1 WHERE id=${idUrl}`;
+    await executeQuery(query2);
+
     res.json(results);
   } catch (error) {
     console.error('Error querying database:', error);
@@ -236,6 +239,7 @@ app.post('/urls/shortUrls', (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS'); // Allow specified methods
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'); // Allow specified headers
   // Your route logic here
+
   res.status(200).json(req.body.param);
 });
 
