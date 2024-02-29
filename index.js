@@ -146,7 +146,7 @@ app.get('/api/urls/:short_like?/:idUser?', async (req, res) => {
 });
 
 // Endpoint to fetch data from the database urls
-app.get('/api/redirect_url/:idUrl?', async (req, res) => {
+app.get('/api/redirect_url/:idUrl?/:idUser?', async (req, res) => {
   try {
     // Execute a sample SQL query
     let idUrl = req.query.idUrl;
