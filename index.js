@@ -158,7 +158,7 @@ app.get('/api/redirect_url/:idUrl?/:idUser?', async (req, res) => {
     if ( idUser === undefined || idUser == 0 ){
       idUser = 0;
     }
-    let query2 = `INSERT INTO redirects (idUrl, idUser, created_at) VALUES (${idUrl},${idUser}, CURRENT_TIME )`;
+    let query2 = `INSERT INTO redirects (idUrl, idUser, updated_at) VALUES (${idUrl},${idUser}, CURRENT_TIME )`;
     await executeQuery(query2);
 
     res.json(results);
