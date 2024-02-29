@@ -150,11 +150,15 @@ app.get('/api/redirect_url/:idUrl?', async (req, res) => {
   try {
     // Execute a sample SQL query
     let idUrl = req.query.idUrl;
+    let idUser = req.query.idUser;
 
     let query = `SELECT * FROM urls WHERE id=${idUrl}`;
     const results = await executeQuery(query);
     // Get new visit which increments
-    let query2 = `UPDATE urls SET visits = visits + 1 WHERE id=${idUrl}`;
+    if ( idUser === undefined || idUser == 0 ){
+      idUser = 0;
+    }
+    let query2 = `INSERT INTO redirects (idUrl, idUser, created_at) VALUES (${idUrl},${idUser}, CURRENT_TIME )`;
     await executeQuery(query2);
 
     res.json(results);
