@@ -195,7 +195,6 @@ app.post('/api/urls', async (req, res) => {
     let query = `insert into urls ( url , short , description , created_at ) values ( '${url}' , '${short}' , '${description}' , CURRENT_TIME )`;
 
     await executeQuery(query);
-    res.json({ message: 'Short registered successfully' });
 
   } catch (error) {
     console.error('Error querying database:', error);
