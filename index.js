@@ -192,7 +192,7 @@ app.post('/api/urls', async (req, res) => {
     // Execute a sample SQL query
     let jsonData = req.body;
     let url = jsonData.url , short = jsonData.short , description = jsonData.description;
-    let query = `insert into urls ( url , short , description , created_at ) values ( '${url}' , '${short}' , '${description}' . CURRENT_TIME )`;
+    let query = `insert into urls ( url , short , description , created_at ) values ( '${url}' , '${short}' , '${description}' , CURRENT_TIME )`;
 
     await executeQuery(query);
     res.json({ message: 'Short registered successfully' });
