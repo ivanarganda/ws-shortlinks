@@ -52,7 +52,7 @@ app.post('/api/users/', async (req, res) => {
   try {
     let jsonData = req.body;
     let name = jsonData.name, email = jsonData.email, password = jsonData.password !== '' ? jsonData.password : '', picture = jsonData.picture;
-    let query = `insert into users ( name , email , password , picture , created_at ) values ( '${name}' , '${email}' , '${password}', '${picture}' , CURRENT_TIME )`;
+    let query = `insert into users ( name , email , password , picture , created_at , updated_at ) values ( '${name}' , '${email}' , '${password}', '${picture}' , CURRENT_TIME , CURRENT_TINME )`;
 
     await executeQuery(query);
     res.json({ message: 'User registered successfully' });
@@ -104,7 +104,7 @@ app.post('/api/register/', async (req, res) => {
       }
 
       // If user does not exist, proceed with registration
-      query = `INSERT INTO users (name, email, password, picture, created_at) VALUES ('${name}', '${email}', '${password}', '${picture}' , CURRENT_TIME )`;
+      query = `INSERT INTO users (name, email, password, picture, created_at , updated_at ) VALUES ('${name}', '${email}', '${password}', '${picture}' , CURRENT_TIME , CURRENT_TIME )`;
       await executeQuery(query);
       res.json({ message: 'User registered successfully' });
 
